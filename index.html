@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinançasPro – Organize sua vida financeira</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ────────────────── SIDEBAR ────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>CAPITAL</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#dashboard"    class="nav-item active" data-section="dashboard">
+        <i class="fa-solid fa-chart-pie"></i><span>Dashboard</span>
+      </a>
+      <a href="#contas"       class="nav-item" data-section="contas">
+        <i class="fa-solid fa-wallet"></i><span>Minhas Contas</span>
+      </a>
+      <a href="#investimentos" class="nav-item" data-section="investimentos">
+        <i class="fa-solid fa-arrow-trend-up"></i><span>Investimentos</span>
+      </a>
+      <a href="#orcamento"    class="nav-item" data-section="orcamento">
+        <i class="fa-solid fa-sliders"></i><span>Orçamento</span>
+      </a>
+      <a href="#dicas"        class="nav-item" data-section="dicas">
+        <i class="fa-solid fa-lightbulb"></i><span>Dicas Financeiras</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">U</div>
+        <div>
+          <p class="user-name" id="sidebarName">Usuário</p>
+          <p class="user-role">Finanças Pessoais</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ────────────────── MAIN ────────────────── -->
+  <div class="main-wrapper">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+      <div class="topbar-center">
+        <p class="topbar-date" id="topbarDate"></p>
+      </div>
+      <div class="topbar-right">
+        <span class="greeting" id="topbarGreeting">Olá</span>
+      </div>
+    </header>
+
+    <main class="content" id="mainContent">
+
+      <!-- ══════════════ DASHBOARD ══════════════ -->
+      <section id="dashboard" class="section active">
+        <div class="section-header">
+          <h1>Dashboard Financeiro</h1>
+          <p>Visão geral das suas finanças</p>
+        </div>
+
+        <!-- Live Market Rates -->
+        <div class="market-strip" id="dashRatesBar">
+          <div class="ms-item"><span class="ms-label">CDI</span><span class="ms-val" id="dashCDI">—</span><span class="ms-unit">% a.a.</span></div>
+          <div class="ms-sep"></div>
+          <div class="ms-item"><span class="ms-label">CDI</span><span class="ms-val" id="dashCDIm">—</span><span class="ms-unit">% a.m.</span></div>
+          <div class="ms-sep"></div>
+          <div class="ms-item"><span class="ms-label">Selic</span><span class="ms-val" id="dashSelic">—</span><span class="ms-unit">% a.a.</span></div>
+          <div class="ms-sep"></div>
+          <div class="ms-item"><span class="ms-label">IPCA</span><span class="ms-val" id="dashIPCA">—</span><span class="ms-unit">% a.m.</span></div>
+          <div class="ms-sep"></div>
+          <div class="ms-item"><span class="ms-label">Poupança</span><span class="ms-val" id="dashPoup">—</span><span class="ms-unit">% a.m.</span></div>
+          <span class="ms-source" id="dashSource">Carregando taxas...</span>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card income">
+            <div class="kpi-icon"><i class="fa-solid fa-arrow-down"></i></div>
+            <div class="kpi-info">
+              <p class="kpi-label">Receitas do Mês</p>
+              <p class="kpi-value" id="kpiReceita">R$ 0,00</p>
+              <p class="kpi-sub" id="kpiReceitaSub">+0% vs mês anterior</p>
+            </div>
+          </div>
+          <div class="kpi-card expense">
+            <div class="kpi-icon"><i class="fa-solid fa-arrow-up"></i></div>
+            <div class="kpi-info">
+              <p class="kpi-label">Despesas do Mês</p>
+              <p class="kpi-value" id="kpiDespesa">R$ 0,00</p>
+              <p class="kpi-sub" id="kpiDespesaSub">+0% vs mês anterior</p>
+            </div>
+          </div>
+          <div class="kpi-card balance">
+            <div class="kpi-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+            <div class="kpi-info">
+              <p class="kpi-label">Saldo Atual</p>
+              <p class="kpi-value" id="kpiSaldo">R$ 0,00</p>
+              <p class="kpi-sub">Receitas – Despesas</p>
+            </div>
+          </div>
+          <div class="kpi-card invest">
+            <div class="kpi-icon"><i class="fa-solid fa-seedling"></i></div>
+            <div class="kpi-info">
+              <p class="kpi-label">Total Investido</p>
+              <p class="kpi-value" id="kpiInvestido">R$ 0,00</p>
+              <p class="kpi-sub" id="kpiInvestidoSub">0 aplicações ativas</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts row -->
+        <div class="charts-row">
+          <div class="card chart-card">
+            <div class="card-header">
+              <h3>Receitas vs Despesas (6 meses)</h3>
+            </div>
+            <canvas id="barChart" height="200"></canvas>
+          </div>
+          <div class="card chart-card">
+            <div class="card-header">
+              <h3>Distribuição de Despesas</h3>
+            </div>
+            <canvas id="doughnutChart" height="200"></canvas>
+          </div>
+        </div>
+
+        <!-- Recent transactions -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Últimas Transações</h3>
+            <button class="btn btn-ghost" onclick="showSection('contas')">Ver todas</button>
+          </div>
+          <div class="transactions-list" id="recentTransactions">
+            <p class="empty-msg">Nenhuma transação ainda. Adicione em <b>Minhas Contas</b>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════ CONTAS ══════════════ -->
+      <section id="contas" class="section">
+        <div class="section-header">
+          <h1>Minhas Contas</h1>
+          <p>Registre receitas e despesas do seu dia a dia</p>
+        </div>
+
+        <!-- Add transaction form -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-plus-circle"></i> Nova Transação</h3>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Descrição</label>
+              <input type="text" id="txDesc" placeholder="Ex: Salário, Aluguel..." />
+            </div>
+            <div class="form-group">
+              <label>Valor (R$)</label>
+              <input type="number" id="txValor" placeholder="0,00" min="0" step="0.01" />
+            </div>
+            <div class="form-group">
+              <label>Tipo</label>
+              <select id="txTipo">
+                <option value="receita">Receita</option>
+                <option value="despesa">Despesa</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Categoria</label>
+              <select id="txCategoria">
+                <option value="Salário">Salário</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Moradia">Moradia</option>
+                <option value="Alimentação">Alimentação</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Saúde">Saúde</option>
+                <option value="Lazer">Lazer</option>
+                <option value="Educação">Educação</option>
+                <option value="Outros">Outros</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Data</label>
+              <input type="date" id="txData" />
+            </div>
+            <div class="form-group form-group-btn">
+              <button class="btn btn-primary" onclick="addTransaction()">
+                <i class="fa-solid fa-plus"></i> Adicionar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-bar">
+          <input type="text" id="filterText" placeholder="Buscar..." oninput="renderTransactions()" />
+          <select id="filterTipo" onchange="renderTransactions()">
+            <option value="">Todos os tipos</option>
+            <option value="receita">Receitas</option>
+            <option value="despesa">Despesas</option>
+          </select>
+          <select id="filterCat" onchange="renderTransactions()">
+            <option value="">Todas as categorias</option>
+            <option value="Salário">Salário</option>
+            <option value="Freelance">Freelance</option>
+            <option value="Moradia">Moradia</option>
+            <option value="Alimentação">Alimentação</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Lazer">Lazer</option>
+            <option value="Educação">Educação</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </div>
+
+        <!-- Transactions table -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Histórico de Transações</h3>
+            <button class="btn btn-danger-ghost" onclick="clearTransactions()">
+              <i class="fa-solid fa-trash"></i> Limpar tudo
+            </button>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table" id="txTable">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Descrição</th>
+                  <th>Categoria</th>
+                  <th>Tipo</th>
+                  <th>Valor</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody id="txBody">
+                <tr><td colspan="6" class="empty-msg">Nenhuma transação cadastrada.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════ INVESTIMENTOS ══════════════ -->
+      <section id="investimentos" class="section">
+        <div class="section-header">
+          <h1>Plano de Investimentos</h1>
+          <p>Taxas em tempo real — Banco Central do Brasil</p>
+        </div>
+
+        <!-- Live Rates Bar -->
+        <div class="rates-bar" id="ratesBar">
+          <div class="rb-item"><span class="rb-label">CDI</span><span class="rb-val" id="rbCDI">—</span><span class="rb-unit">% a.a.</span></div>
+          <div class="rb-sep"></div>
+          <div class="rb-item"><span class="rb-label">CDI</span><span class="rb-val" id="rbCDIm">—</span><span class="rb-unit">% a.m.</span></div>
+          <div class="rb-sep"></div>
+          <div class="rb-item"><span class="rb-label">Selic</span><span class="rb-val" id="rbSelic">—</span><span class="rb-unit">% a.a.</span></div>
+          <div class="rb-sep"></div>
+          <div class="rb-item"><span class="rb-label">IPCA</span><span class="rb-val" id="rbIPCA">—</span><span class="rb-unit">% a.m.</span></div>
+          <div class="rb-sep"></div>
+          <div class="rb-item"><span class="rb-label">Poupança</span><span class="rb-val" id="rbPoup">—</span><span class="rb-unit">% a.m.</span></div>
+          <span class="rb-source" id="rbSource">Carregando...</span>
+          <button class="btn btn-ghost btn-sm" onclick="fetchAndRefreshRates()" style="margin-left:auto">Atualizar Taxas</button>
+        </div>
+
+        <!-- Planner -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Planner de Investimentos</h3>
+          </div>
+          <p class="prod-section-label">Produto</p>
+          <div class="prod-grid" id="prodGrid">
+            <button class="prod-btn active" data-prod="cdb100" onclick="selectProduct(this)">
+              <span class="prod-name">CDB 100% CDI</span>
+              <span class="prod-rate" id="rate-cdb100">—</span>
+              <span class="prod-tag">IR regressivo</span>
+            </button>
+            <button class="prod-btn" data-prod="cdb110" onclick="selectProduct(this)">
+              <span class="prod-name">CDB 110% CDI</span>
+              <span class="prod-rate" id="rate-cdb110">—</span>
+              <span class="prod-tag">IR regressivo</span>
+            </button>
+            <button class="prod-btn" data-prod="cdb90" onclick="selectProduct(this)">
+              <span class="prod-name">CDB 90% CDI</span>
+              <span class="prod-rate" id="rate-cdb90">—</span>
+              <span class="prod-tag">IR regressivo</span>
+            </button>
+            <button class="prod-btn" data-prod="lci90" onclick="selectProduct(this)">
+              <span class="prod-name">LCI / LCA 90% CDI</span>
+              <span class="prod-rate" id="rate-lci90">—</span>
+              <span class="prod-tag prod-tag-green">Isento IR</span>
+            </button>
+            <button class="prod-btn" data-prod="tesouroselic" onclick="selectProduct(this)">
+              <span class="prod-name">Tesouro Selic</span>
+              <span class="prod-rate" id="rate-tesouroselic">—</span>
+              <span class="prod-tag">IR regressivo</span>
+            </button>
+            <button class="prod-btn" data-prod="tesouroi" onclick="selectProduct(this)">
+              <span class="prod-name">Tesouro IPCA+ 6%</span>
+              <span class="prod-rate" id="rate-tesouroi">—</span>
+              <span class="prod-tag">IR regressivo</span>
+            </button>
+            <button class="prod-btn" data-prod="acoes" onclick="selectProduct(this)">
+              <span class="prod-name">Ações (Ibovespa média)</span>
+              <span class="prod-rate" id="rate-acoes">~1.17% a.m.</span>
+              <span class="prod-tag prod-tag-warn">Variável</span>
+            </button>
+            <button class="prod-btn" data-prod="poupanca" onclick="selectProduct(this)">
+              <span class="prod-name">Poupança</span>
+              <span class="prod-rate" id="rate-poupanca">—</span>
+              <span class="prod-tag prod-tag-green">Isento IR</span>
+            </button>
+          </div>
+
+          <div class="form-grid" style="margin-top:1.5rem">
+            <div class="form-group">
+              <label>Depósito Inicial (R$)</label>
+              <input type="number" id="plannerInicial" value="300" min="0" step="100" />
+            </div>
+            <div class="form-group">
+              <label>Aporte Mensal (R$)</label>
+              <input type="number" id="plannerAporte" value="300" min="0" step="100" />
+            </div>
+            <div class="form-group">
+              <label>Período (meses)</label>
+              <input type="number" id="plannerMeses" value="12" min="1" max="600" />
+            </div>
+            <div class="form-group form-group-btn">
+              <button class="btn btn-primary" onclick="runPlanner()">Calcular Rendimento</button>
+            </div>
+          </div>
+
+          <div id="plannerResults" style="display:none">
+            <div class="planner-kpis">
+              <div class="pk"><p>Total Aportado</p><strong id="pkAportado">—</strong></div>
+              <div class="pk"><p>Rendimento Bruto</p><strong class="col-pos" id="pkBruto">—</strong></div>
+              <div class="pk"><p>Imposto de Renda</p><strong class="col-neg" id="pkIR">—</strong></div>
+              <div class="pk pk-gold"><p>Valor Final Líquido</p><strong id="pkLiquido">—</strong></div>
+              <div class="pk"><p>Rentabilidade Líquida</p><strong class="col-pos" id="pkRentLiq">—</strong></div>
+              <div class="pk"><p>Inflação no Período (IPCA)</p><strong class="col-neg" id="pkPoder">—</strong></div>
+            </div>
+            <canvas id="plannerChart" height="110" style="margin:1.75rem 0 1.25rem"></canvas>
+            <details class="proj-details">
+              <summary>Projeção mês a mês</summary>
+              <div class="table-wrapper" style="margin-top:1rem">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Mês</th>
+                      <th>Total Aportado</th>
+                      <th>Rendimento Bruto</th>
+                      <th>IR</th>
+                      <th>Saldo Líquido</th>
+                      <th>Valor Real (IPCA)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="plannerTableBody"></tbody>
+                </table>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <!-- Comparison -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Comparação de Produtos</h3>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Valor Inicial (R$)</label>
+              <input type="number" id="compValor" value="10000" min="0" step="1000" />
+            </div>
+            <div class="form-group">
+              <label>Aporte Mensal (R$)</label>
+              <input type="number" id="compAporte" value="0" min="0" />
+            </div>
+            <div class="form-group">
+              <label>Período (meses)</label>
+              <input type="number" id="compMeses" value="24" min="1" />
+            </div>
+            <div class="form-group form-group-btn">
+              <button class="btn btn-primary" onclick="runComparacao()">Comparar Todos</button>
+            </div>
+          </div>
+          <div id="compResult"></div>
+        </div>
+
+        <!-- Carteira -->
+        <div class="invest-grid">
+          <div class="card" style="margin-bottom:0">
+            <div class="card-header">
+              <h3>Minha Carteira</h3>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Nome do Investimento</label>
+                <input type="text" id="invNome" placeholder="Ex: CDB Banco XYZ" />
+              </div>
+              <div class="form-group">
+                <label>Tipo</label>
+                <select id="invTipo">
+                  <option value="Renda Fixa">Renda Fixa</option>
+                  <option value="Ações">Ações</option>
+                  <option value="FIIs">FIIs</option>
+                  <option value="Cripto">Cripto</option>
+                  <option value="Tesouro Direto">Tesouro Direto</option>
+                  <option value="CDB">CDB</option>
+                  <option value="LCI/LCA">LCI/LCA</option>
+                  <option value="Fundos">Fundos</option>
+                  <option value="Outros">Outros</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Valor Aplicado (R$)</label>
+                <input type="number" id="invValor" placeholder="0,00" min="0" step="0.01" />
+              </div>
+              <div class="form-group">
+                <label>Rentabilidade ao mês (%)</label>
+                <input type="number" id="invRent" placeholder="Ex: 0.8" step="0.01" />
+              </div>
+              <div class="form-group form-group-btn" style="grid-column: 1/-1">
+                <button class="btn btn-primary" onclick="addInvestimento()">
+                  <i class="fa-solid fa-plus"></i> Adicionar à Carteira
+                </button>
+              </div>
+            </div>
+            <div id="carteiraList" class="carteira-list">
+              <p class="empty-msg">Nenhum investimento cadastrado.</p>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:0">
+            <div class="card-header">
+              <h3>Distribuição da Carteira</h3>
+            </div>
+            <div class="alloc-row">
+              <canvas id="allocChart" height="180"></canvas>
+              <div id="allocLegend" class="alloc-legend"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════ ORÇAMENTO ══════════════ -->
+      <section id="orcamento" class="section">
+        <div class="section-header">
+          <h1>Planejamento de Orçamento</h1>
+          <p>Defina metas mensais por categoria e acompanhe o progresso</p>
+        </div>
+
+        <!-- Regra 50/30/20 -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-circle-half-stroke"></i> Regra 50/30/20</h3>
+          </div>
+          <p class="card-desc">A regra mais usada no mundo: <b>50%</b> para necessidades, <b>30%</b> para desejos e <b>20%</b> para investimentos/reserva de emergência.</p>
+          <div class="form-group" style="max-width:320px;margin-bottom:1.5rem">
+            <label>Sua renda mensal líquida (R$)</label>
+            <input type="number" id="rendaMensal" placeholder="0,00" oninput="calcular5030()" />
+          </div>
+          <div class="regra-grid" id="regraGrid">
+            <div class="regra-card necessidades">
+              <div class="regra-pct">50%</div>
+              <p class="regra-label">Necessidades</p>
+              <p class="regra-tip">Moradia, alimentação, transporte, saúde</p>
+              <p class="regra-valor" id="r50">R$ 0,00</p>
+            </div>
+            <div class="regra-card desejos">
+              <div class="regra-pct">30%</div>
+              <p class="regra-label">Desejos / Lazer</p>
+              <p class="regra-tip">Viagens, restaurantes, streaming, hobbies</p>
+              <p class="regra-valor" id="r30">R$ 0,00</p>
+            </div>
+            <div class="regra-card investimentos">
+              <div class="regra-pct">20%</div>
+              <p class="regra-label">Investimentos</p>
+              <p class="regra-tip">Reserva de emergência, aposentadoria, metas</p>
+              <p class="regra-valor" id="r20">R$ 0,00</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metas de orçamento -->
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-bullseye"></i> Metas por Categoria</h3>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Categoria</label>
+              <select id="metaCat">
+                <option value="Moradia">Moradia</option>
+                <option value="Alimentação">Alimentação</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Saúde">Saúde</option>
+                <option value="Lazer">Lazer</option>
+                <option value="Educação">Educação</option>
+                <option value="Outros">Outros</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Limite mensal (R$)</label>
+              <input type="number" id="metaValor" placeholder="0,00" min="0" step="0.01" />
+            </div>
+            <div class="form-group form-group-btn">
+              <button class="btn btn-primary" onclick="addMeta()">
+                <i class="fa-solid fa-plus"></i> Definir Meta
+              </button>
+            </div>
+          </div>
+          <div id="metasGrid" class="metas-grid"></div>
+        </div>
+
+        <!-- Projeção de Gastos -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Projeção de Gastos com Inflação</h3>
+          </div>
+          <p class="card-desc">Simule quanto seus gastos atuais custarão no futuro com o IPCA, e qual capital você precisa ter investido para manter seu padrão de vida.</p>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Gasto Mensal Atual (R$)</label>
+              <input type="number" id="gastoAtual" placeholder="3000" min="0" step="100" />
+            </div>
+            <div class="form-group">
+              <label>Projetar em (anos)</label>
+              <input type="number" id="gastoAnos" value="10" min="1" max="40" />
+            </div>
+            <div class="form-group form-group-btn">
+              <button class="btn btn-primary" onclick="projetarGastos()">Projetar</button>
+            </div>
+          </div>
+          <div id="gastoResult" style="display:none">
+            <div class="planner-kpis" style="margin-top:1.25rem">
+              <div class="pk"><p>Gasto mensal hoje</p><strong id="gastoAtualDisplay">—</strong></div>
+              <div class="pk pk-gold"><p>Gasto mensal em <span id="gastoAnosLabel">10</span> anos</p><strong id="gastoFuturo">—</strong></div>
+              <div class="pk"><p>IPCA acumulado</p><strong class="col-neg" id="gastoIPCA">—</strong></div>
+              <div class="pk"><p>Capital necessário (CDB 100% CDI)</p><strong id="gastoCapital">—</strong></div>
+            </div>
+            <div class="table-wrapper" style="margin-top:1.25rem">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Ano</th><th>Gasto Mensal</th><th>Gasto Anual</th><th>IPCA Acum.</th><th>Capital Necessário</th></tr>
+                </thead>
+                <tbody id="gastoTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════ DICAS ══════════════ -->
+      <section id="dicas" class="section">
+        <div class="section-header">
+          <h1>Dicas Financeiras</h1>
+          <p>Conhecimento que transforma a sua relação com o dinheiro</p>
+        </div>
+
+        <div class="tips-filter">
+          <button class="tip-filter-btn active" data-cat="todas" onclick="filterTips(this)">Todas</button>
+          <button class="tip-filter-btn" data-cat="basico" onclick="filterTips(this)">Básico</button>
+          <button class="tip-filter-btn" data-cat="investimentos" onclick="filterTips(this)">Investimentos</button>
+          <button class="tip-filter-btn" data-cat="habitos" onclick="filterTips(this)">Hábitos</button>
+          <button class="tip-filter-btn" data-cat="dividas" onclick="filterTips(this)">Dívidas</button>
+        </div>
+
+        <div class="tips-grid" id="tipsGrid"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ────────────────── MODAL ONBOARDING ────────────────── -->
+  <div class="modal-overlay" id="onboardingModal">
+    <div class="modal">
+      <div class="modal-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <h2>CAPITAL — Finanças Pessoais</h2>
+      <p>Identifique-se para começar</p>
+      <input type="text" id="onboardingName" placeholder="Seu nome..." maxlength="30" />
+      <button class="btn btn-primary btn-full" onclick="finishOnboarding()">
+        Começar <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
