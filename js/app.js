@@ -80,17 +80,24 @@ function finishOnboarding() {
 }
 
 function applyUserName() {
-  document.getElementById('sidebarName').textContent    = userName;
+  const sidebarNameEl = document.getElementById('sidebarName');
+  if (sidebarNameEl) sidebarNameEl.textContent = userName;
   document.getElementById('topbarGreeting').textContent = `Olá, ${userName}`;
-  document.querySelector('.user-avatar').textContent    = userName[0].toUpperCase();
+  const avatarEl = document.querySelector('.user-avatar');
+  if (avatarEl) avatarEl.textContent = userName[0].toUpperCase();
+  const gfAvatar = document.getElementById('gfAvatar');
+  if (gfAvatar) gfAvatar.textContent = userName[0].toUpperCase();
 }
 
 // ───── DATE ─────
 function setTopbarDate() {
   const now   = new Date();
   const opts  = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
-  document.getElementById('topbarDate').textContent =
-    now.toLocaleDateString('pt-BR', opts).replace(/^\w/, c => c.toUpperCase());
+  const el = document.getElementById('topbarDate');
+  if (el) {
+    el.textContent =
+      now.toLocaleDateString('pt-BR', opts).replace(/^\w/, c => c.toUpperCase());
+  }
 }
 
 // ───── NAVIGATION ─────
@@ -108,11 +115,16 @@ function setupNav() {
 
 function showSection(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  // Update both old nav-items and new gf-nav-items
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.gf-nav-item').forEach(n => n.classList.remove('active'));
+
   const el = document.getElementById(name);
   if (el) el.classList.add('active');
   const nav = document.querySelector(`.nav-item[data-section="${name}"]`);
   if (nav) nav.classList.add('active');
+  const gfNav = document.querySelector(`.gf-nav-item[data-section="${name}"]`);
+  if (gfNav) gfNav.classList.add('active');
 
   // Refresh charts when switching to invest section
   if (name === 'investimentos') {
@@ -129,13 +141,16 @@ function showSection(name) {
 
 // ───── MOBILE MENU ─────
 function setupMobileMenu() {
-  document.getElementById('menuToggle').addEventListener('click', () => {
-    document.getElementById('sidebar').classList.toggle('open');
-  });
+  const menuToggle = document.getElementById('menuToggle');
+  if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('open');
+    });
+  }
   // close on outside click
   document.addEventListener('click', e => {
     const sidebar = document.getElementById('sidebar');
-    if (sidebar.classList.contains('open') &&
+    if (sidebar && sidebar.classList.contains('open') &&
         !sidebar.contains(e.target) &&
         e.target.id !== 'menuToggle') {
       sidebar.classList.remove('open');
@@ -318,19 +333,19 @@ function renderBarChart() {
     data: {
       labels,
       datasets: [
-        { label: 'Receitas', data: receitas, backgroundColor: '#4a8c5c', borderRadius: 0, borderSkipped: false },
-        { label: 'Despesas', data: despesas, backgroundColor: '#9b3a3a', borderRadius: 0, borderSkipped: false },
+        { label: 'Receitas', data: receitas, backgroundColor: '#137333', borderRadius: 4, borderSkipped: false },
+        { label: 'Despesas', data: despesas, backgroundColor: '#a50e0e', borderRadius: 4, borderSkipped: false },
       ]
     },
     options: {
       responsive: true,
       plugins: {
-        legend: { position:'top', labels:{ font:{ family:'DM Sans', size:11 }, color:'#4a4a4a', boxWidth:10, boxHeight:10 } },
+        legend: { position:'top', labels:{ font:{ family:'Google Sans, Roboto, sans-serif', size:12 }, color:'#5f6368', boxWidth:12, boxHeight:12, usePointStyle:true, pointStyle:'circle' } },
         tooltip: { callbacks: { label: ctx => fmt(ctx.parsed.y) } }
       },
       scales: {
-        y: { ticks: { callback: v => 'R$ ' + v.toLocaleString('pt-BR'), font:{family:'DM Sans',size:11}, color:'#9a9a96' }, grid: { color: '#ebebea' } },
-        x: { grid: { display: false }, ticks: { font:{family:'DM Sans',size:11}, color:'#9a9a96' } }
+        y: { ticks: { callback: v => 'R$ ' + v.toLocaleString('pt-BR'), font:{family:'Roboto, sans-serif',size:11}, color:'#80868b' }, grid: { color: '#e8eaed' } },
+        x: { grid: { display: false }, ticks: { font:{family:'Roboto, sans-serif',size:11}, color:'#80868b' } }
       }
     }
   });
@@ -365,7 +380,7 @@ function renderDoughnut() {
 
   const labels = Object.keys(catMap);
   const data   = Object.values(catMap);
-  const colors = ['#0f0f0f','#c9a84c','#4a4a4a','#9a9a96','#d9d9d6','#2c2c2c','#7a7a76','#b09040','#1e1e1e'];
+  const colors = ['#1a73e8','#137333','#e37400','#a50e0e','#9334e6','#00897b','#f9ab00','#5f6368','#185abc'];
 
   const ctx = document.getElementById('doughnutChart');
   if (!ctx) return;
@@ -390,7 +405,7 @@ function renderDoughnut() {
       responsive: true,
       cutout: '65%',
       plugins: {
-        legend: { position:'bottom', labels:{ font:{ family:'DM Sans', size:11 }, color:'#4a4a4a', boxWidth:10, boxHeight:10, padding:14 } },
+        legend: { position:'bottom', labels:{ font:{ family:'Google Sans, Roboto, sans-serif', size:12 }, color:'#5f6368', boxWidth:12, boxHeight:12, padding:16, usePointStyle:true, pointStyle:'circle' } },
         tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${fmt(ctx.parsed)}` } }
       }
     }
@@ -433,9 +448,9 @@ function simularInvestimento() {
         label: 'Montante',
         data: pontos,
         fill: true,
-        backgroundColor: 'rgba(201,168,76,.08)',
-        borderColor: '#c9a84c',
-        borderWidth: 1.5,
+        backgroundColor: 'rgba(26,115,232,.08)',
+        borderColor: '#1a73e8',
+        borderWidth: 2,
         pointRadius: meses <= 24 ? 3 : 0,
         tension: .35
       }]
@@ -447,8 +462,8 @@ function simularInvestimento() {
         tooltip: { callbacks: { label: ctx => fmt(ctx.parsed.y) } }
       },
       scales: {
-        y: { ticks: { callback: v => 'R$ '+v.toLocaleString('pt-BR'), font:{family:'DM Sans',size:11}, color:'#9a9a96' }, grid:{ color:'#ebebea' } },
-        x: { grid: { display: false }, ticks: { maxTicksLimit: 7, font:{family:'DM Sans',size:11}, color:'#9a9a96' } }
+        y: { ticks: { callback: v => 'R$ '+v.toLocaleString('pt-BR'), font:{family:'Roboto, sans-serif',size:11}, color:'#80868b' }, grid:{ color:'#e8eaed' } },
+        x: { grid: { display: false }, ticks: { maxTicksLimit: 7, font:{family:'Roboto, sans-serif',size:11}, color:'#80868b' } }
       }
     }
   });
@@ -544,7 +559,7 @@ function renderAllocChart() {
   const labels = Object.keys(typeMap);
   const data   = Object.values(typeMap);
   const total  = data.reduce((a,v)=>a+v,0);
-  const colors = ['#0f0f0f','#c9a84c','#4a4a4a','#9a9a96','#d9d9d6','#2c2c2c','#7a7a76','#b09040','#1e1e1e'];
+  const colors = ['#1a73e8','#137333','#e37400','#a50e0e','#9334e6','#00897b','#f9ab00','#5f6368','#185abc'];
 
   allocChartInst = new Chart(ctx, {
     type: 'doughnut',
@@ -988,20 +1003,20 @@ function renderPlannerChart(hist, totalAportadoFinal) {
         {
           label: 'Saldo Liquido',
           data: hist.map(h => h.liq),
-          borderColor: '#c9a84c', backgroundColor: 'rgba(201,168,76,.07)',
+          borderColor: '#1a73e8', backgroundColor: 'rgba(26,115,232,.07)',
           borderWidth: 2, fill: true, tension: .35,
           pointRadius: hist.length <= 24 ? 3 : 0
         },
         {
           label: 'Total Aportado',
           data: hist.map(h => h.totalAportado),
-          borderColor: '#4a4a4a', borderWidth: 1.5,
+          borderColor: '#5f6368', borderWidth: 1.5,
           borderDash: [5, 4], fill: false, tension: .35, pointRadius: 0
         },
         {
           label: 'Valor Real (IPCA)',
           data: hist.map(h => h.real),
-          borderColor: '#9b3a3a', borderWidth: 1.5,
+          borderColor: '#a50e0e', borderWidth: 1.5,
           borderDash: [2, 3], fill: false, tension: .35, pointRadius: 0
         }
       ]
@@ -1009,12 +1024,12 @@ function renderPlannerChart(hist, totalAportadoFinal) {
     options: {
       responsive: true,
       plugins: {
-        legend: { position: 'top', labels: { font: { family: 'DM Sans', size: 11 }, color: '#4a4a4a', boxWidth: 10, boxHeight: 2, padding: 16 } },
+        legend: { position: 'top', labels: { font: { family: 'Google Sans, Roboto, sans-serif', size: 12 }, color: '#5f6368', boxWidth: 12, boxHeight: 3, padding: 16, usePointStyle: false } },
         tooltip: { callbacks: { label: c => ' ' + c.dataset.label + ': ' + fmt(c.parsed.y) } }
       },
       scales: {
-        y: { ticks: { callback: v => 'R$' + v.toLocaleString('pt-BR'), font: { family: 'DM Sans', size: 10 }, color: '#9a9a96' }, grid: { color: '#ebebea' } },
-        x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', size: 10 }, color: '#9a9a96', maxTicksLimit: 8 } }
+        y: { ticks: { callback: v => 'R$' + v.toLocaleString('pt-BR'), font: { family: 'Roboto, sans-serif', size: 11 }, color: '#80868b' }, grid: { color: '#e8eaed' } },
+        x: { grid: { display: false }, ticks: { font: { family: 'Roboto, sans-serif', size: 11 }, color: '#80868b', maxTicksLimit: 8 } }
       }
     }
   });
